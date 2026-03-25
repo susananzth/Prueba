@@ -1,0 +1,259 @@
+{
+  "info": {
+    "name": "API Prueba ALM",
+    "description": "Colección de endpoints para evaluación de ALM",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8001/api",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Listar Trabajadores",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/employees",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "employees"
+          ],
+          "query": [
+            {
+              "key": "search",
+              "value": "",
+              "disabled": true
+            },
+            {
+              "key": "project_id",
+              "value": "1",
+              "disabled": true
+            }
+          ]
+        },
+        "description": "GET /api/employees\nRetorna todos los trabajadores con su proyecto asignado.\nParámetros opcionales: search (nombre/email/cargo), project_id"
+      }
+    },
+    {
+      "name": "2. Listar con búsqueda",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/employees?search=Ana",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "employees"
+          ],
+          "query": [
+            {
+              "key": "search",
+              "value": "Ana"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "3. Crear Trabajador",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"María López Ruiz\",\n  \"email\": \"maria.lopez@empresa.com\",\n  \"position\": \"Frontend Developer\",\n  \"phone\": \"999888777\",\n  \"project_id\": 1\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/employees",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "employees"
+          ]
+        },
+        "description": "POST /api/employees\nCrea un nuevo trabajador.\nCampos requeridos: name, email, position\nCampos opcionales: phone, project_id"
+      }
+    },
+    {
+      "name": "4. Crear — Error validación (email inválido)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Jo\",\n  \"email\": \"no-es-un-email\",\n  \"position\": \"\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/employees",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "employees"
+          ]
+        },
+        "description": "Debe retornar HTTP 422 con los errores de validación."
+      }
+    },
+    {
+      "name": "5. Ver Detalle de Trabajador",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/employees/1",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "employees",
+            "1"
+          ]
+        },
+        "description": "GET /api/employees/{id}\nRetorna el detalle del trabajador incluyendo sus contratos."
+      }
+    },
+    {
+      "name": "6. Actualizar Trabajador",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Ana Torres Vega\",\n  \"email\": \"ana.torres@empresa.com\",\n  \"position\": \"Tech Lead\",\n  \"phone\": \"999111001\",\n  \"project_id\": 2\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/employees/1",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "employees",
+            "1"
+          ]
+        },
+        "description": "PUT /api/employees/{id}\nActualiza los datos de un trabajador existente."
+      }
+    },
+    {
+      "name": "7. Desactivar Trabajador",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/employees/8",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "employees",
+            "8"
+          ]
+        },
+        "description": "DELETE /api/employees/{id}\nDesactivación lógica — cambia status a 0, no elimina el registro."
+      }
+    },
+    {
+      "name": "8. Trabajador no encontrado (404)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/employees/9999",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "employees",
+            "9999"
+          ]
+        },
+        "description": "Debe retornar HTTP 404 con mensaje de error."
+      }
+    },
+    {
+      "name": "9. Listar Proyectos",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/projects",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "projects"
+          ]
+        },
+        "description": "GET /api/projects\nRetorna proyectos activos para poblar selects del formulario."
+      }
+    }
+  ]
+}
