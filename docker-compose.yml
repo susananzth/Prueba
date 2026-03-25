@@ -1,0 +1,60 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: app_prod
+    container_name: laravel_test_app
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    networks:
+      - laravel_test_network
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: web_prod
+    container_name: laravel_test_web
+    ports:
+      - "8001:80"
+    networks:
+      - laravel_test_network
+    depends_on:
+      - app
+    restart: always
+
+  db:
+    image: mysql:8.0
+    container_name: laravel_test_db
+    networks:
+      - laravel_test_network
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    volumes:
+      - laravel_test_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    restart: always
+
+networks:
+  laravel_test_network:
+    driver: bridge
+
+volumes:
+  laravel_test_db_data:
+    driver: local
